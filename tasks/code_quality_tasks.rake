@@ -25,37 +25,6 @@ namespace :quality do
     flog_runner(45, ['app/controllers'])
   end
 
-  desc "Run Flay"
-  task(:flay) do
-    require 'flay'
-    puts "=============================================="
-    puts "Flay output: "
-    threshold = 25
-    flay = Flay.new({:fuzzy => false, :verbose => false, :mass => threshold})
-    flay.process(*Flay.expand_dirs_to_files(['app/models', 'app/helpers', 'lib']))
-    flay.report
-
-    puts "#{flay.masses.size} chunks of code have a duplicate mass > #{threshold}" unless flay.masses.empty?
-    puts "=============================================="
-    puts ""
-  end
-
-  desc "Run Roodi"
-  task(:roodi) do
-    require 'roodi'
-    puts "=============================================="
-    puts "Roodi output:"
-    runner = Roodi::Core::Runner.new
-    runner.config = "#{RAILS_ROOT}/config/roodi.yml"
-    %w(app/**/*.rb lib/**/*.rb).each do |pattern|
-      Dir.glob(pattern).each { |file| runner.check_file(file) } 
-    end
-    runner.errors.each { |error| puts error}
-    puts "#{runner.errors.length} Errors"
-    puts "=============================================="
-  end
-
-
   def flog_runner(threshold, dirs)
     flog = Flog.new
     flog.flog_files dirs
@@ -78,5 +47,43 @@ namespace :quality do
     puts "=============================================="
     puts ""
   end
+
+  desc "Run Flay"
+  task(:flay) do
+    require 'flay'
+    puts "=============================================="
+    puts "Flay output: "
+    threshold = 25
+    flay = Flay.new({:fuzzy => false, :verbose => false, :mass => threshold})
+    flay.process(*Flay.expand_dirs_to_files(['app/models', 'app/helpers', 'lib']))
+    flay.report
+
+    puts "#{flay.masses.size} chunks of code have a duplicate mass > #{threshold}" unless flay.masses.empty?
+    puts "=============================================="
+    puts ""
+  end
+
+  desc "Run Roodi"
+  task(:roodi) do
+    require 'roodi'
+    puts "=============================================="
+    puts "Roodi output:"
+    error_count = roodi_runner('roodi.yml', "app/models/*.rb lib/**/*.rb app/helpers/**.rb")
+    error_count += roodi_runner('controllers_roodi.yml', "app/controllers/*.rb")
+    puts "#{error_count} Errors"
+    puts "=============================================="
+  end
+
+  def roodi_runner(config_file, patterns)
+    runner = Roodi::Core::Runner.new
+    runner.config = "#{RAILS_ROOT}/config/#{config_file}roodi.yml"
+    %w(patterns).each do |pattern|
+      Dir.glob(pattern).each { |file| runner.check_file(file) } 
+    end
+    runner.errors.each { |error| puts error}
+    return runner.errors.length 
+  end
+
+
 
 end
