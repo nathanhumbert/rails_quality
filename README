@@ -1,13 +1,29 @@
-CodeQuality
+RailsQuality
 ===========
 
-Introduction goes here.
+Rails Quality is a rails plugin with a rake task that runs several code quality tools.
+
+Current code quality tools:
+Flog
+Flay
+Roodi
+
+The tools have been configured with thresholds that I have tested on a couple apps that I work on.
+
+
+Installation
+============
+script/plugin install git://github.com/nathanhumbert/rails_quality.git
 
 
 Example
 =======
+rake quality:test
 
-Example goes here.
+
+Thanks
+======
+I would like to thank QualitySmith Inc. (www.qualitysmith.com) for making the release of this plugin possible.
 
 
-Copyright (c) 2009 [name of plugin creator], released under the MIT license
+Copyright (c) 2009 Nathan Humbert, released under the MIT license
