@@ -5,6 +5,7 @@ namespace :quality do
     Rake::Task["quality:flog"].execute
     Rake::Task["quality:flay"].execute
     Rake::Task["quality:roodi"].execute
+		Rake::Task["quality:notes"].execute
   end
 
   desc "Run quality tests"
@@ -84,6 +85,15 @@ namespace :quality do
     return runner.errors.length 
   end
 
-
+	desc "Output notes from source"
+	task(:notes) do
+    puts "=============================================="
+		puts "Fixme notes:"
+		Rake::Task["notes:fixme"].execute
+    puts "=============================================="
+		puts "Todo notes:"
+		Rake::Task["notes:todo"].execute
+    puts "=============================================="
+	end
 
 end
