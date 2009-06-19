@@ -19,6 +19,12 @@ namespace :quality do
     Rake::Task["quality:roodi"].execute
   end
 
+	desc "stats"
+	task(:stats) do
+		require 'plugins/rails_quality/lib/command_line_metric_output'
+		CommandLineMetricOutput.new()
+	end
+
   desc "Run Flog"
   task(:flog) do 
     require 'flog'
