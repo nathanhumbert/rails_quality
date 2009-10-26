@@ -11,6 +11,7 @@ namespace :quality do
   desc "Run quality tests"
   task(:report) do
     ENV['output'] = "html"
+		make_log_entry
     Rake::Task["test:units:rcov"].execute
     Rake::Task["test:functionals:rcov"].execute
 
@@ -18,6 +19,12 @@ namespace :quality do
     Rake::Task["quality:flay"].execute
     Rake::Task["quality:roodi"].execute
   end
+
+	def make_log_entry
+		puts "Logging test run"
+		f = File.new(File.join(RAILS_ROOT, 'log', 'test_runs.log'), "a+")
+		f.puts (Time.now.to_s)
+	end
 
 	desc "stats"
 	task(:stats) do
