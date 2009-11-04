@@ -41,7 +41,7 @@ namespace :quality do
 
   def flog_runner(threshold, dirs)
     flog = Flog.new
-    flog.flog_files dirs
+    flog.flog dirs
     average_threshold = threshold / 3.0
     puts "=============================================="
     puts "Flog output for #{dirs.join(", ")}:"
